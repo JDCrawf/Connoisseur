@@ -15,13 +15,13 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	private JMenu file_menu, edit_menu, help_menu, playlist_menu;
 	private JMenu new_file_submenu, view_playlist_submenu, delete_playlist_submenu;
 	
-	private JMenuItem new_file_menuitem, new_dir_menuitem, set_default_dir_menuitem;
+	private JMenuItem new_file_menuitem, new_dir_menuitem, set_default_dir_menuitem, exit_menuitem;
 	private JMenuItem new_playlist_menuitem;
 	private JMenuItem edit_tags_menuitem;
 	
 	// constructor creates entries in menu bar
 	public CMenuBar() {
-		this.menu_options_instance = Connoisseur.getInstance().getMenuOptions();
+		this.menu_options_instance = this;
 		this.initFileMenu();
 		this.initEditMenu();
 		this.initPlaylistMenu();
@@ -51,12 +51,16 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		set_default_dir_menuitem = new JMenuItem("Set Default Directory");
 		set_default_dir_menuitem.addActionListener(this);
 		
+		exit_menuitem = new JMenuItem("Exit");
+		exit_menuitem.addActionListener(this);
 		// TODO add icons
 		
 		// fills "File" menu with "New" submenu and "Set Default Directory" item
 		// to add more entries to "File" menu, place here in desired order
 		file_menu.add(new_file_submenu);
 		file_menu.add(set_default_dir_menuitem);
+		file_menu.addSeparator();
+		file_menu.add(exit_menuitem);
 		
 		this.add(file_menu);
 	}
@@ -124,6 +128,10 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		if (selection_source == set_default_dir_menuitem) {
 			System.out.println("Set Default Directory Clicked");
 			// TODO prompt user to enter new default directory, save to JSON
+		}
+		if (selection_source == exit_menuitem) {
+			System.out.println("Exit Clicked");
+			Connoisseur.getInstance().getWindow().dispose();
 		}
 		if (selection_source == edit_tags_menuitem) {
 			System.out.println("Edit Tags Clicked");

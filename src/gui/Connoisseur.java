@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +30,23 @@ public class Connoisseur {
 		this.current_dir = default_dir;
 		
 		init();
+		
+		// TODO use this windowlistener to save system on exit
+		main_window.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				eitherClosed();
+			}
+			@Override
+			public void windowClosed(WindowEvent e) {
+				eitherClosed();
+			}
+			
+			public void eitherClosed() {
+				// TODO add saving data on close here
+				System.out.println("Connoisseur Closed");
+			}
+		});
 	}
 	
 	public static void main(String[] args) {
@@ -74,6 +93,7 @@ public class Connoisseur {
 		// attach main_hori_split to main window and adjust default position
 		main_window.add(main_hori_split, BorderLayout.CENTER);
 		main_hori_split.setDividerLocation((int) (main_window.getWidth() * (0.3)));
+		main_hori_split.requestFocus();
 	
 		// Splits folder contents from the rest
 		JSplitPane right_vert_split = new JSplitPane();

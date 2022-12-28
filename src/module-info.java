@@ -5,6 +5,6 @@
  * @author jdcra
  *
  */
-module PersonalConnoiseur {
+module Connoisseur {
 	requires java.desktop;
 }
