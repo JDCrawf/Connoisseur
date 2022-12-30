@@ -8,21 +8,32 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.JToolBar;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JTree;
+//import javax.swing.table.DefaultTableModel;
 
 public class Connoisseur {
 	
+	// General variables
 	private static Connoisseur gui_instance;
+	private String default_dir;
+	private String current_dir;
+	
+	// gui variables
 	private JFrame main_window;
+	
+	// menu bar variables
 	private CMenuBar menu_options;
 	private CSearchArea search_area;
 	
-	private String default_dir;
-	private String current_dir;
+	// folder tree variables
+	private JLabel folder_tree_label;
+	private JTree folder_tree;
+	
+	// content view variables
+	private JLabel contents_label;
+	private JTable contents_table;
 	
 	public Connoisseur() {
 		gui_instance = this;
@@ -108,7 +119,7 @@ public class Connoisseur {
 		JSplitPane folder_contents_pane = new JSplitPane();
 		folder_contents_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		folder_contents_pane.setEnabled(false); // prevents resizing
-		folder_contents_pane.setDividerSize(1);
+		folder_contents_pane.setDividerSize(0);
 		// attach splitpane that creates sections for file path to display above folder contents
 		right_vert_split.setLeftComponent(folder_contents_pane);
 		
@@ -122,11 +133,15 @@ public class Connoisseur {
 		botright_hori_split.setResizeWeight(1);
 		
 		// TODO insert folder tree into main_hori_split.setLeftComponent()
+		folder_tree_label = new JLabel("Library");
+		
 		
 		// TODO insert folder contents into right_vert_split.setLeftComponent()
+		contents_label = new JLabel(default_dir);
+		folder_contents_pane.setLeftComponent(contents_label);
 		
-		/* This test works, TODO need to call this through separate object or method
-		JLabel test_label = new JLabel("file path");
+		/* This test works,
+		// TODO need to call this through separate object or method
 		DefaultTableModel test_contents = new DefaultTableModel(10,5) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -134,7 +149,6 @@ public class Connoisseur {
 			}
 		};
 		JTable test_table = new JTable(test_contents);
-		folder_contents_pane.setLeftComponent(test_label);
 		folder_contents_pane.setRightComponent(test_table);
 		*/
 		
@@ -146,6 +160,8 @@ public class Connoisseur {
 	public void setCurrentDir(String _path) { current_dir = _path;}
 	
 	public String getCurrentDir() { return current_dir;}
+	public JLabel getTreeLabel() { return folder_tree_label;}
+	public JLabel getContentLabel() { return contents_label;}
 	public static Connoisseur getInstance() { return gui_instance;}
 	public JFrame getWindow() { return main_window;}
 	public CMenuBar getMenuOptions() { return menu_options;}

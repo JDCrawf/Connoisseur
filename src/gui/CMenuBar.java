@@ -95,9 +95,14 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		// initialize and fill "View Playlist" submenu
 		view_playlist_submenu = new JMenu("View Playlist");
 		
-		// TODO procedurally fill with created playlists prefixed with "Open "
 		// Start test playlist list
 		ArrayList<String> test_list = new ArrayList<String>();
+		// TODO parse JSON for ArrayList of tags
+		test_list.add("a");
+		test_list.add("b");
+		test_list.add("c");
+		test_list.add("d");
+		
 		JMenuItem temp_del, temp_view;
 		if (test_list.size() > 0) {
 			for (int i = 0; i < test_list.size(); i++) {
@@ -167,6 +172,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		for(int i = 0; i < view_playlist_submenu.getItemCount(); i++) {
 			if (selection.getSource() == view_playlist_submenu.getItem(i)) {
 				System.out.println(selection.getActionCommand() + " View Clicked");
+				Connoisseur.getInstance().getContentLabel().setText("Playlist: " + selection.getActionCommand());
 				// TODO display contents of playlist from json
 			}
 		}
