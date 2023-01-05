@@ -5,10 +5,12 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -29,8 +31,7 @@ public class Connoisseur {
 	private CSearchArea search_area;
 	
 	// folder tree variables
-	private JLabel folder_tree_label;
-	private JTree folder_tree;
+	private JScrollPane folder_tree;
 	
 	// content view variables
 	private CTabbedPane contents_pane;
@@ -39,6 +40,7 @@ public class Connoisseur {
 	public Connoisseur() {
 		gui_instance = this;
 		this.default_dir = System.getProperty("user.home");
+		this.default_dir = "C:\\\\Users\\jdcra\\Documents";
 		this.current_dir = default_dir;
 		
 		init();
@@ -116,7 +118,7 @@ public class Connoisseur {
 		right_vert_split.setDividerLocation((int) (main_window.getHeight() * (0.5)));
 		right_vert_split.setResizeWeight(1); // only resize folder_contents panel automatically
 		
-				// Splits file details from file thumbnail/player
+		// Splits file details from file thumbnail/player
 		JSplitPane botright_hori_split = new JSplitPane();
 		botright_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		botright_hori_split.setDividerSize(5);
@@ -124,8 +126,26 @@ public class Connoisseur {
 		right_vert_split.setRightComponent(botright_hori_split);
 		botright_hori_split.setResizeWeight(1);
 		
-		// TODO insert folder tree into main_hori_split.setLeftComponent()
-		folder_tree_label = new JLabel("Library");
+		
+		
+		// start folder tree
+		folder_tree = new JScrollPane();
+		JTree tree = new JTree();
+		// TODO Add custom mouse listener for the folder tree
+		
+		File file = new File(current_dir);
+		//If given null or invalid path name, default to user.home as initial directory
+		if (current_dir == null || current_dir.isEmpty() || file.isDirectory() == false) {
+			current_dir = System.getProperty("user.home");
+		}
+		tree.setModel(new CFolderTree(new File(current_dir)));
+		
+		folder_tree.setViewportView(tree);
+		
+		folder_tree.setColumnHeaderView(new JLabel("Library"));
+		main_hori_split.setLeftComponent(folder_tree);
+		// end folder tree
+		
 		
 		
 		// TODO insert folder contents into right_vert_split.setLeftComponent()
@@ -158,7 +178,6 @@ public class Connoisseur {
 	public void setCurrentDir(String _path) { current_dir = _path;}
 	
 	public String getCurrentDir() { return current_dir;}
-	public JLabel getTreeLabel() { return folder_tree_label;}
 	public CTabbedPane getContentsPane() { return contents_pane;}
 	public static Connoisseur getInstance() { return gui_instance;}
 	public JFrame getWindow() { return main_window;}

@@ -9,6 +9,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class CMenuBar extends JMenuBar implements ActionListener {
 	
@@ -175,8 +177,15 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			if (selection.getSource() == view_playlist_submenu.getItem(i)) {
 				System.out.println(selection.getActionCommand() + " View Clicked");
 				// TODO check if pane already exists before trying to create, if so change focus to that pane
-				Connoisseur.getInstance().getContentsPane().addTabWithClose(selection.getActionCommand(), new JPanel());
-				// TODO display contents of playlist from json
+				// TODO replace test_contents/test_table with table made from contents of playlist
+				DefaultTableModel test_contents = new DefaultTableModel(10,5) {
+					@Override
+					public boolean isCellEditable(int row, int column) {
+						return false;
+					}
+				};
+				JTable test_table = new JTable(test_contents);
+				Connoisseur.getInstance().getContentsPane().addTabWithClose(selection.getActionCommand(), test_table);
 			}
 		}
 	}
