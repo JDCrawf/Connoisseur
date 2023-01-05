@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
 public class CMenuBar extends JMenuBar implements ActionListener {
 	
@@ -22,6 +23,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	
 	// constructor creates entries in menu bar
 	public CMenuBar() {
+		super();
 		this.menu_options_instance = this;
 		this.initFileMenu();
 		this.initEditMenu();
@@ -172,7 +174,8 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		for(int i = 0; i < view_playlist_submenu.getItemCount(); i++) {
 			if (selection.getSource() == view_playlist_submenu.getItem(i)) {
 				System.out.println(selection.getActionCommand() + " View Clicked");
-				Connoisseur.getInstance().getContentLabel().setText("Playlist: " + selection.getActionCommand());
+				// TODO check if pane already exists before trying to create, if so change focus to that pane
+				Connoisseur.getInstance().getContentsPane().addTabWithClose(selection.getActionCommand(), new JPanel());
 				// TODO display contents of playlist from json
 			}
 		}

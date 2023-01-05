@@ -8,10 +8,11 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
-//import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableModel;
 
 public class Connoisseur {
 	
@@ -32,7 +33,7 @@ public class Connoisseur {
 	private JTree folder_tree;
 	
 	// content view variables
-	private JLabel contents_label;
+	private CTabbedPane contents_pane;
 	private JTable contents_table;
 	
 	public Connoisseur() {
@@ -115,16 +116,7 @@ public class Connoisseur {
 		right_vert_split.setDividerLocation((int) (main_window.getHeight() * (0.5)));
 		right_vert_split.setResizeWeight(1); // only resize folder_contents panel automatically
 		
-		// Creates space for label stating the current directory path
-		JSplitPane folder_contents_pane = new JSplitPane();
-		folder_contents_pane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		folder_contents_pane.setEnabled(false); // prevents resizing
-		folder_contents_pane.setDividerSize(0);
-		// attach splitpane that creates sections for file path to display above folder contents
-		right_vert_split.setLeftComponent(folder_contents_pane);
-		
-		
-		// Splits file details from file thumbnail/player
+				// Splits file details from file thumbnail/player
 		JSplitPane botright_hori_split = new JSplitPane();
 		botright_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		botright_hori_split.setDividerSize(5);
@@ -137,10 +129,11 @@ public class Connoisseur {
 		
 		
 		// TODO insert folder contents into right_vert_split.setLeftComponent()
-		contents_label = new JLabel(default_dir);
-		folder_contents_pane.setLeftComponent(contents_label);
+		//contents_label = new JLabel(default_dir);
+		//folder_contents_pane.setLeftComponent(contents_label);
+		contents_pane = new CTabbedPane();
 		
-		/* This test works,
+		// This test works,
 		// TODO need to call this through separate object or method
 		DefaultTableModel test_contents = new DefaultTableModel(10,5) {
 			@Override
@@ -149,8 +142,13 @@ public class Connoisseur {
 			}
 		};
 		JTable test_table = new JTable(test_contents);
-		folder_contents_pane.setRightComponent(test_table);
-		*/
+		
+		contents_pane.addTab(current_dir, test_table);
+
+		contents_pane.addTabWithClose("test 1", new JPanel());
+		contents_pane.addTabWithClose("test 2", new JPanel());
+		contents_pane.addTabWithClose("test 3", new JPanel());
+		right_vert_split.setLeftComponent(contents_pane);
 		
 		// TODO insert file metadata info into botright_hori_split.setLeftComponent()
 		
@@ -161,7 +159,7 @@ public class Connoisseur {
 	
 	public String getCurrentDir() { return current_dir;}
 	public JLabel getTreeLabel() { return folder_tree_label;}
-	public JLabel getContentLabel() { return contents_label;}
+	public CTabbedPane getContentsPane() { return contents_pane;}
 	public static Connoisseur getInstance() { return gui_instance;}
 	public JFrame getWindow() { return main_window;}
 	public CMenuBar getMenuOptions() { return menu_options;}

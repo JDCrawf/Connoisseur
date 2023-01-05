@@ -16,6 +16,7 @@ public class CSearchArea extends JTextField implements ActionListener{
 	private Color ghost_color;
 
 	public CSearchArea (String _text) {
+		super();
 		this.search_area_instance = this;
 		this.ghost_text = _text;
 		this.ghost_color = Color.LIGHT_GRAY;
