@@ -126,9 +126,7 @@ public class Connoisseur {
 		right_vert_split.setRightComponent(botright_hori_split);
 		botright_hori_split.setResizeWeight(1);
 		
-		
-		
-		// start folder tree
+		// start folder tree ----------------------------------------
 		folder_tree = new JScrollPane();
 		JTree tree = new JTree();
 		// TODO Add custom mouse listener for the folder tree
@@ -144,9 +142,9 @@ public class Connoisseur {
 		
 		folder_tree.setColumnHeaderView(new JLabel("Library"));
 		main_hori_split.setLeftComponent(folder_tree);
-		// end folder tree
+		// end folder tree ----------------------------------------
 		
-		
+		// start folder contents ----------------------------------------
 		
 		// TODO insert folder contents into right_vert_split.setLeftComponent()
 		//contents_label = new JLabel(default_dir);
@@ -169,6 +167,7 @@ public class Connoisseur {
 		contents_pane.addTabWithClose("test 2", new JPanel());
 		contents_pane.addTabWithClose("test 3", new JPanel());
 		right_vert_split.setLeftComponent(contents_pane);
+		// end folder contents ----------------------------------------
 		
 		// TODO insert file metadata info into botright_hori_split.setLeftComponent()
 		

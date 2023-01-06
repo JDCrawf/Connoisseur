@@ -64,25 +64,7 @@ public class CFolderTree implements TreeModel{
 
 	@Override
 	public void valueForPathChanged(TreePath _path, Object _new_value) {
-		File old_file = (File) _path.getLastPathComponent();
-		String file_parent_path = old_file.getParent();
-		String new_file_name = (String) _new_value;
-		File target_file = new File(file_parent_path, new_file_name);
-		old_file.renameTo(target_file);
-		File parent = new File(file_parent_path);
-		int[] changed_children_indices = {getIndexOfChild(parent, target_file)};
-		Object[] changed_children = {target_file};
-		fireTreeNodesChanged(_path.getParentPath(), changed_children_indices, changed_children);
-	}
 
-	private void fireTreeNodesChanged(TreePath _parent_path, int[] _indices, Object[] _children) {
-		TreeModelEvent event = new TreeModelEvent(this, _parent_path, _indices, _children);
-		Iterator<TreeModelListener> iterator = listeners.iterator();
-		TreeModelListener listener = null;
-		while (iterator.hasNext()) {
-			listener = (TreeModelListener) iterator.next();
-			listener.treeNodesChanged(event);
-		}
 	}
 	
 	@Override
