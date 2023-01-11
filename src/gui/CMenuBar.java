@@ -14,8 +14,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class CMenuBar extends JMenuBar implements ActionListener {
 	
-	private CMenuBar menu_options_instance;
-	
 	private JMenu file_menu, edit_menu, help_menu, playlist_menu;
 	private JMenu new_file_submenu, view_playlist_submenu, delete_playlist_submenu;
 	
@@ -26,7 +24,6 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	// constructor creates entries in menu bar
 	public CMenuBar() {
 		super();
-		this.menu_options_instance = this;
 		this.initFileMenu();
 		this.initEditMenu();
 		this.initPlaylistMenu();
@@ -87,14 +84,10 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		new_playlist_menuitem = new JMenuItem("New Playlist");
 		new_playlist_menuitem.addActionListener(this);
 		
-		// TODO Create a list of all existing playlists here
+		// TODO Create a list of all existing playlists here, pulling from playlist JSON
 		
 		// initialize and fill "Delete Playlist" submenu
 		delete_playlist_submenu = new JMenu("Delete Playlist");
-		
-		// TODO procedurally fill with created playlists prefixed with "Delete "
-		
-		//delete_playlist_submenu.add(new JLabel("  Empty  "));
 		
 		// initialize and fill "View Playlist" submenu
 		view_playlist_submenu = new JMenu("View Playlist");
@@ -103,6 +96,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		ArrayList<String> test_list = new ArrayList<String>();
 		// TODO parse JSON for ArrayList of tags
 		test_list.add("a");
+		test_list.add("aa");
 		test_list.add("b");
 		test_list.add("c");
 		test_list.add("d");
@@ -112,8 +106,10 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 			for (int i = 0; i < test_list.size(); i++) {
 				temp_del = new JMenuItem(test_list.get(i));
 				temp_del.addActionListener(this);
+				
 				temp_view = new JMenuItem(test_list.get(i));
 				temp_view.addActionListener(this);
+				
 				delete_playlist_submenu.add(temp_del);
 				view_playlist_submenu.add(temp_view);
 			}
@@ -135,8 +131,10 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	}
 	private void initHelpMenu() {
 		help_menu = new JMenu("Help");
-		
+
 		// TODO add help options
+		JMenuItem empty = new JMenuItem("empty");
+		help_menu.add(empty);
 		
 		this.add(help_menu);
 	}
@@ -175,8 +173,6 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		}
 		for(int i = 0; i < view_playlist_submenu.getItemCount(); i++) {
 			if (selection.getSource() == view_playlist_submenu.getItem(i)) {
-				System.out.println(selection.getActionCommand() + " View Clicked");
-				// TODO check if pane already exists before trying to create, if so change focus to that pane
 				// TODO replace test_contents/test_table with table made from contents of playlist
 				DefaultTableModel test_contents = new DefaultTableModel(10,5) {
 					@Override
@@ -184,10 +180,18 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 						return false;
 					}
 				};
-				JTable test_table = new JTable(test_contents);
-				Connoisseur.getInstance().getContentsPane().addTabWithClose(selection.getActionCommand(), test_table);
+				JTable table = new JTable(test_contents);
+				
+				CTabbedPane contents_pane = Connoisseur.getInstance().getContentsPane();
+				// Checks if there is already a tab for the playlist before trying to open a new one
+				if (contents_pane.indexOfTab(selection.getActionCommand()) == -1) {
+					System.out.println(selection.getActionCommand() + " tabbed opened.");
+					contents_pane.addTabWithClose(selection.getActionCommand(), table);
+					contents_pane.setSelectedIndex(contents_pane.indexOfTab(selection.getActionCommand()));
+				} else {
+					System.out.println(selection.getActionCommand() + " already open.");
+				}
 			}
 		}
 	}
-
 }

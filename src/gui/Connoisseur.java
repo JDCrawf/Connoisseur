@@ -22,6 +22,7 @@ public class Connoisseur {
 	private static Connoisseur gui_instance;
 	private String default_dir;
 	private String current_dir;
+	private String current_file;
 	
 	// gui variables
 	private JFrame main_window;
@@ -31,7 +32,7 @@ public class Connoisseur {
 	private CSearchArea search_area;
 	
 	// folder tree variables
-	private JScrollPane folder_tree;
+	private JScrollPane folder_tree_pane;
 	
 	// content view variables
 	private CTabbedPane contents_pane;
@@ -127,21 +128,14 @@ public class Connoisseur {
 		botright_hori_split.setResizeWeight(1);
 		
 		// start folder tree ----------------------------------------
-		folder_tree = new JScrollPane();
+		folder_tree_pane = new JScrollPane();
 		JTree tree = new JTree();
-		// TODO Add custom mouse listener for the folder tree
 		
-		File file = new File(current_dir);
-		//If given null or invalid path name, default to user.home as initial directory
-		if (current_dir == null || current_dir.isEmpty() || file.isDirectory() == false) {
-			current_dir = System.getProperty("user.home");
-		}
 		tree.setModel(new CFolderTree(new File(current_dir)));
 		
-		folder_tree.setViewportView(tree);
-		
-		folder_tree.setColumnHeaderView(new JLabel("Library"));
-		main_hori_split.setLeftComponent(folder_tree);
+		folder_tree_pane.setViewportView(tree);
+		folder_tree_pane.setColumnHeaderView(new JLabel("Library"));
+		main_hori_split.setLeftComponent(folder_tree_pane);
 		// end folder tree ----------------------------------------
 		
 		// start folder contents ----------------------------------------
@@ -150,8 +144,8 @@ public class Connoisseur {
 		//contents_label = new JLabel(default_dir);
 		//folder_contents_pane.setLeftComponent(contents_label);
 		contents_pane = new CTabbedPane();
+		setContentsPane(contents_pane);
 		
-		// This test works,
 		// TODO need to call this through separate object or method
 		DefaultTableModel test_contents = new DefaultTableModel(10,5) {
 			@Override
@@ -174,12 +168,23 @@ public class Connoisseur {
 		// TODO insert file thumbnail/video player into botright_hori_split.setRightComponent()
 	}
 	
-	public void setCurrentDir(String _path) { current_dir = _path;}
-	
-	public String getCurrentDir() { return current_dir;}
-	public CTabbedPane getContentsPane() { return contents_pane;}
+	public void setDefaultDir(String _dir) {
+		default_dir = _dir;
+		//TODO save newly assigned directory to JSON file
+	}
+	public void setCurrentDir(String _dir) {
+		current_dir = _dir;
+	}
+	public void setCurrentFile(String _file) {
+		current_file = _file;
+		//TODO display information of currently selected file to file metadata info
+	}
+
 	public static Connoisseur getInstance() { return gui_instance;}
-	public JFrame getWindow() { return main_window;}
-	public CMenuBar getMenuOptions() { return menu_options;}
 	public CSearchArea getSearchArea() { return search_area;}
+	public CTabbedPane getContentsPane() { return contents_pane;}
+	public CMenuBar getMenuOptions() { return menu_options;}
+	public String getCurrentDir() { return current_dir;}
+	public String getCurrentFile() { return current_file;}
+	public JFrame getWindow() { return main_window;}
 }

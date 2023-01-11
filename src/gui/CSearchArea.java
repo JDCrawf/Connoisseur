@@ -24,7 +24,7 @@ public class CSearchArea extends JTextField implements ActionListener{
 	}
 	
 	private void init() {
-		System.out.println(ghost_text);
+		//System.out.println(ghost_text);
 	}
 
 	@Override

@@ -1,10 +1,7 @@
 package gui;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.Vector;
 
-import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
@@ -12,10 +9,8 @@ import javax.swing.tree.TreePath;
 public class CFolderTree implements TreeModel{
 
 	private File root_dir;
-	private Vector<TreeModelListener> listeners = new Vector<TreeModelListener>();
 	
 	public CFolderTree(File _root_dir) {
-		super();
 		this.root_dir = _root_dir;
 	}
 
@@ -24,7 +19,12 @@ public class CFolderTree implements TreeModel{
 		File dir = (File) _parent;
 		String[] children = dir.list();
 		
-        return new TreeFile(dir, children[_index]);
+		return new File(dir, children[_index]) {
+			@Override
+			public String toString() {
+				return getName();
+			}
+		};
 	}
 
 	@Override
@@ -63,30 +63,9 @@ public class CFolderTree implements TreeModel{
 	}
 
 	@Override
-	public void valueForPathChanged(TreePath _path, Object _new_value) {
-
-	}
-	
+	public void valueForPathChanged(TreePath _path, Object _new_value) {}
 	@Override
-	public void addTreeModelListener(TreeModelListener _listener) {
-		listeners.add(_listener);
-	}
-
+	public void addTreeModelListener(TreeModelListener _listener) {}
 	@Override
-	public void removeTreeModelListener(TreeModelListener _listener) {
-		listeners.remove(_listener);
-	}
-	
-}
-
-class TreeFile extends File {
-
-	public TreeFile(File _parent, String _child) {
-		super(_parent, _child);
-	}
-	
-	@Override
-	public String toString() {
-		return getName();
-	}
+	public void removeTreeModelListener(TreeModelListener _listener) {}
 }
