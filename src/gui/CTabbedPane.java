@@ -27,7 +27,6 @@ public class CTabbedPane extends JTabbedPane implements MouseListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
 		int tab_num = getUI().tabForCoordinate(this, e.getX(), e.getY());
 		if (tab_num < 0) {
 			return;
@@ -37,6 +36,7 @@ public class CTabbedPane extends JTabbedPane implements MouseListener {
 		}
 		Rectangle rect = ((CloseTabIcon)getIconAt(tab_num)).getBounds();
 		if (rect.contains(e.getX(), e.getY())) {
+			Connoisseur.log(this.getTitleAt(tab_num) + " tab closed.");
 			this.removeTabAt(tab_num);
 		}
 	}
@@ -58,26 +58,26 @@ class CloseTabIcon implements Icon{
 
 	@Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
-		this.x_pos=x;
-		this.y_pos=y;
+		this.x_pos = x;
+		this.y_pos = y;
 
 		Color col=g.getColor();
 
 		g.setColor(Color.black);
-		int y_p=y+2;
-		g.drawLine(x+1, y_p, x+12, y_p);
-		g.drawLine(x+1, y_p+13, x+12, y_p+13);
-		g.drawLine(x, y_p+1, x, y_p+12);
-		g.drawLine(x+13, y_p+1, x+13, y_p+12);
-		g.drawLine(x+3, y_p+3, x+10, y_p+10);
-		g.drawLine(x+3, y_p+4, x+9, y_p+10);
-		g.drawLine(x+4, y_p+3, x+10, y_p+9);
-		g.drawLine(x+10, y_p+3, x+3, y_p+10);
-		g.drawLine(x+10, y_p+4, x+4, y_p+10);
-		g.drawLine(x+9, y_p+3, x+3, y_p+9);
+		int y_p = y + 2;
+		g.drawLine(x + 1, y_p, x + 12, y_p);
+		g.drawLine(x + 1, y_p + 13, x + 12, y_p + 13);
+		g.drawLine(x, y_p + 1, x, y_p + 12);
+		g.drawLine(x + 13, y_p + 1, x + 13, y_p + 12);
+		g.drawLine(x + 3, y_p + 3, x + 10, y_p + 10);
+		g.drawLine(x + 3, y_p + 4, x + 9, y_p + 10);
+		g.drawLine(x + 4, y_p + 3, x + 10, y_p + 9);
+		g.drawLine(x + 10, y_p + 3, x + 3, y_p + 10);
+		g.drawLine(x + 10, y_p + 4, x + 4, y_p + 10);
+		g.drawLine(x + 9, y_p + 3, x + 3, y_p + 9);
 		g.setColor(col);
 		if (close_icon != null) {
-			close_icon.paintIcon(c, g, x+width, y_p);
+			close_icon.paintIcon(c, g, x + width, y_p);
 		}
 	}
 

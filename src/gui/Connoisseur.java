@@ -16,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 
+import functions.CSearch;
+
 public class Connoisseur {
 	
 	// General variables
@@ -29,7 +31,7 @@ public class Connoisseur {
 	
 	// menu bar variables
 	private CMenuBar menu_options;
-	private CSearchArea search_area;
+	private CSearch search_area;
 	
 	// folder tree variables
 	private JScrollPane folder_tree_pane;
@@ -40,26 +42,21 @@ public class Connoisseur {
 	
 	public Connoisseur() {
 		gui_instance = this;
-		this.default_dir = System.getProperty("user.home");
-		this.default_dir = "C:\\\\Users\\jdcra\\Documents";
+		this.default_dir = System.getProperty("user.home") + "\\Documents";
 		this.current_dir = default_dir;
 		
 		init();
 		
-		// TODO use this windowlistener to save system on exit
+		// TODO use this to save system on exit
 		main_window.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				eitherClosed();
+				windowClosed(e);
 			}
 			@Override
 			public void windowClosed(WindowEvent e) {
-				eitherClosed();
-			}
-			
-			public void eitherClosed() {
-				// TODO add saving data on close here
-				System.out.println("Connoisseur Closed");
+				//TODO add functionality that runs on close here, updating playlists/tags, etc
+				log("Program closed.");
 			}
 		});
 	}
@@ -91,7 +88,7 @@ public class Connoisseur {
 		menubar.setResizeWeight(1);
 		
 		menu_options = new CMenuBar();
-		search_area = new CSearchArea("Search by Tags");
+		search_area = new CSearch();
 		// TODO add keyboard listener for search bar
 		search_area.setMinimumSize(new Dimension(150, menu_options.getHeight()));
 		
@@ -132,6 +129,7 @@ public class Connoisseur {
 		JTree tree = new JTree();
 		
 		tree.setModel(new CFolderTree(new File(current_dir)));
+		//TODO add mouselistener
 		
 		folder_tree_pane.setViewportView(tree);
 		folder_tree_pane.setColumnHeaderView(new JLabel("Library"));
@@ -141,10 +139,8 @@ public class Connoisseur {
 		// start folder contents ----------------------------------------
 		
 		// TODO insert folder contents into right_vert_split.setLeftComponent()
-		//contents_label = new JLabel(default_dir);
-		//folder_contents_pane.setLeftComponent(contents_label);
 		contents_pane = new CTabbedPane();
-		setContentsPane(contents_pane);
+		//TODO add mouselistener to tabbed pane
 		
 		// TODO need to call this through separate object or method
 		DefaultTableModel test_contents = new DefaultTableModel(10,5) {
@@ -153,13 +149,11 @@ public class Connoisseur {
 				return false;
 			}
 		};
-		JTable test_table = new JTable(test_contents);
+		contents_table = new JTable(test_contents);
 		
-		contents_pane.addTab(current_dir, test_table);
-
+		contents_pane.addTab(current_dir, contents_table);
 		contents_pane.addTabWithClose("test 1", new JPanel());
-		contents_pane.addTabWithClose("test 2", new JPanel());
-		contents_pane.addTabWithClose("test 3", new JPanel());
+
 		right_vert_split.setLeftComponent(contents_pane);
 		// end folder contents ----------------------------------------
 		
@@ -168,6 +162,15 @@ public class Connoisseur {
 		// TODO insert file thumbnail/video player into botright_hori_split.setRightComponent()
 	}
 	
+	// Other Methods
+	public static void log(String _text) {
+		System.out.println("Connoisseur: " + _text);
+	}
+	private String getName() {
+		return "";
+	}
+	
+	// Setters
 	public void setDefaultDir(String _dir) {
 		default_dir = _dir;
 		//TODO save newly assigned directory to JSON file
@@ -180,8 +183,9 @@ public class Connoisseur {
 		//TODO display information of currently selected file to file metadata info
 	}
 
+	// Getters
 	public static Connoisseur getInstance() { return gui_instance;}
-	public CSearchArea getSearchArea() { return search_area;}
+	public CSearch getSearchArea() { return search_area;}
 	public CTabbedPane getContentsPane() { return contents_pane;}
 	public CMenuBar getMenuOptions() { return menu_options;}
 	public String getCurrentDir() { return current_dir;}
