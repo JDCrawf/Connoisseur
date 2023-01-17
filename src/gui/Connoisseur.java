@@ -6,7 +6,10 @@ import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +19,7 @@ import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 
-import functions.CSearch;
+import functions.*;
 
 public class Connoisseur {
 	
@@ -27,11 +30,11 @@ public class Connoisseur {
 	private String current_file;
 	
 	// gui variables
-	private JFrame main_window;
+	private JFrame gui_frame;
 	
 	// menu bar variables
 	private CMenuBar menu_options;
-	private CSearch search_area;
+	private SearchByTag search_area;
 	
 	// folder tree variables
 	private JScrollPane folder_tree_pane;
@@ -40,15 +43,17 @@ public class Connoisseur {
 	private CTabbedPane contents_pane;
 	private JTable contents_table;
 	
+	private final static String PROGRAM_NAME = "Connoisseur";
+	
 	public Connoisseur() {
 		gui_instance = this;
-		this.default_dir = System.getProperty("user.home") + "\\Documents";
+		this.default_dir = System.getProperty("user.home") + File.separator + "Documents";
 		this.current_dir = default_dir;
 		
 		init();
 		
 		// TODO use this to save system on exit
-		main_window.addWindowListener(new WindowAdapter() {
+		gui_frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				windowClosed(e);
@@ -66,7 +71,7 @@ public class Connoisseur {
 			public void run() {
 				try {
 					Connoisseur window = new Connoisseur();
-					window.main_window.setVisible(true);
+					window.gui_frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -77,35 +82,23 @@ public class Connoisseur {
 	
 	private void init() {
 		// Creates main window named Connoisseur
-		main_window = new JFrame("Connoisseur");
-		main_window.setBounds(100,100,720,480);
-		main_window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		gui_frame = new JFrame("Connoisseur");
+		gui_frame.setBounds(100,100,720,480);
+		gui_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// Creates menu bar at top of frame
 		JSplitPane menubar = new JSplitPane();
 		menubar.setEnabled(false);
 		menubar.setDividerSize(5);
 		menubar.setResizeWeight(1);
-		
-		menu_options = new CMenuBar();
-		search_area = new CSearch();
-		// TODO add keyboard listener for search bar
-		search_area.setMinimumSize(new Dimension(150, menu_options.getHeight()));
-		
-		// fill menu bar with menu_options and search area
-		menubar.setLeftComponent(menu_options);
-		menubar.setRightComponent(search_area);
-		// attaches menubar to main window
-		main_window.add(menubar, BorderLayout.NORTH);
-		
+				
 		// Splits folder tree from the rest
 		JSplitPane main_hori_split = new JSplitPane();
 		main_hori_split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		main_hori_split.setDividerSize(5);
 		// attach main_hori_split to main window and adjust default position
-		main_window.add(main_hori_split, BorderLayout.CENTER);
-		main_hori_split.setDividerLocation((int) (main_window.getWidth() * (0.3)));
-		main_hori_split.requestFocus();
+		gui_frame.add(main_hori_split, BorderLayout.CENTER);
+		main_hori_split.setDividerLocation((int) (gui_frame.getWidth() * (0.3)));
 	
 		// Splits folder contents from the rest
 		JSplitPane right_vert_split = new JSplitPane();
@@ -113,7 +106,7 @@ public class Connoisseur {
 		right_vert_split.setDividerSize(5);
 		// attach right_vert_split to main_hori_split and adjust default position
 		main_hori_split.setRightComponent(right_vert_split);
-		right_vert_split.setDividerLocation((int) (main_window.getHeight() * (0.5)));
+		right_vert_split.setDividerLocation((int) (gui_frame.getHeight() * (0.5)));
 		right_vert_split.setResizeWeight(1); // only resize folder_contents panel automatically
 		
 		// Splits file details from file thumbnail/player
@@ -123,6 +116,25 @@ public class Connoisseur {
 		// attach botright_hori_split to right_vert_split and adjust default position
 		right_vert_split.setRightComponent(botright_hori_split);
 		botright_hori_split.setResizeWeight(1);
+		
+		
+		
+		
+		// start menu bar ----------------------------------------
+		menu_options = new CMenuBar();
+		search_area = new SearchByTag();
+		// TODO add keyboard listener for search bar
+		search_area.setMinimumSize(new Dimension(150, menu_options.getHeight()));
+		
+		// fill menu bar with menu_options and search area
+		menubar.setLeftComponent(menu_options);
+		menubar.setRightComponent(search_area);
+		// attaches menubar to main window
+		gui_frame.add(menubar, BorderLayout.NORTH);
+		// end menu bar ----------------------------------------
+		
+		
+		
 		
 		// start folder tree ----------------------------------------
 		folder_tree_pane = new JScrollPane();
@@ -136,38 +148,122 @@ public class Connoisseur {
 		main_hori_split.setLeftComponent(folder_tree_pane);
 		// end folder tree ----------------------------------------
 		
+		
+		
+		
 		// start folder contents ----------------------------------------
 		
 		// TODO insert folder contents into right_vert_split.setLeftComponent()
 		contents_pane = new CTabbedPane();
 		//TODO add mouselistener to tabbed pane
 		
-		// TODO need to call this through separate object or method
-		DefaultTableModel test_contents = new DefaultTableModel(10,5) {
+		contents_table = displayDirContents(current_dir + File.separator + "Homework");
+		
+		contents_pane.addTab(getName(current_dir), new JScrollPane(contents_table));
+		contents_pane.addTabWithClose("test 1", new JScrollPane(new JPanel()));
+
+		right_vert_split.setLeftComponent(contents_pane);
+		// end folder contents ----------------------------------------
+		
+		
+		
+		
+		// TODO insert file metadata info into botright_hori_split.setLeftComponent()
+		
+		
+		
+		
+		// TODO insert file thumbnail/video player into botright_hori_split.setRightComponent()
+		
+		
+		
+		
+		// Size constraints for Swing objects
+		gui_frame.setMinimumSize(new Dimension(720,480));
+		folder_tree_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.2)), (int) (gui_frame.getHeight())));
+		contents_pane.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.4))));
+		botright_hori_split.setMinimumSize(new Dimension((int) (gui_frame.getWidth() * (0.6)), (int) (gui_frame.getHeight() * (0.2))));
+	}
+	
+	// Other Methods
+	public static void log(String _text) {
+		System.out.println("[" + PROGRAM_NAME + "] " + _text);
+	}
+	private String getName(String _path) {
+		File temp = new File(_path);
+		return temp.getName();
+	}
+	public JTable displayDirContents(String _dir) {
+		String selected_dir = _dir;
+		ViewDirectory dir = new ViewDirectory(selected_dir);
+		
+		String[] columns = {"", "Name", "Creation Date", "Last Access", "Last Modified", "Size"};
+		Object[] children = dir.getChildren();
+		
+		int table_columns = columns.length;
+		int table_rows = dir.getChildCount();
+		
+		// checks if current directory is the default directory, if not creates a column for to navigate up a folder
+		int move_down = 0;
+		if (!selected_dir.equals(default_dir)) {
+			move_down = 1;
+		}
+		
+		DefaultTableModel table = new DefaultTableModel(table_rows + move_down, table_columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-		contents_table = new JTable(test_contents);
+		table.setColumnIdentifiers(columns);
 		
-		contents_pane.addTab(current_dir, contents_table);
-		contents_pane.addTabWithClose("test 1", new JPanel());
-
-		right_vert_split.setLeftComponent(contents_pane);
-		// end folder contents ----------------------------------------
+		// Enables JTable to correctly display icons
+		if (table_rows == 0) {
+			contents_table = new JTable(table) {
+				public Class getColumnClass(int column) {
+					return ImageIcon.class;
+				}
+			};
+		} else {
+			contents_table = new JTable(table);
+		}
 		
-		// TODO insert file metadata info into botright_hori_split.setLeftComponent()
+		// sets column sizings
+		contents_table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		contents_table.getTableHeader().setReorderingAllowed(false);
+		contents_table.getColumn("").setMinWidth(20);
+		contents_table.getColumn("").setMaxWidth(20);
 		
-		// TODO insert file thumbnail/video player into botright_hori_split.setRightComponent()
-	}
-	
-	// Other Methods
-	public static void log(String _text) {
-		System.out.println("Connoisseur: " + _text);
-	}
-	private String getName() {
-		return "";
+		// adds back arrow if not in default directory
+		if (move_down == 1) {
+			contents_table.setValueAt("..", 0, 1);
+			// TODO add back arrow ImageIcon
+		}
+		
+		// loop for filling out JTable's metadata
+		for (int i = 0; i < table_rows; i++) {
+			// absolute path of current child file;
+			String i_file_path = selected_dir + File.separator + children[i].toString();
+			
+			// fills first column with icons differentiating files and folders
+			if (Files.isDirectory(Paths.get(i_file_path))) {
+				// TODO add folder icon
+			} else {
+				// TODO add file icon
+			}
+			
+			// fills second column with file's name
+			contents_table.setValueAt(children[i], i + move_down, 1);
+			
+			// TODO create ArrayList<String> of each file's metadata
+			
+			// Dummy fills in rest of columns with just the name
+			for (int j = 2; j < columns.length; j++) {
+				contents_table.setValueAt(children[i], i + move_down, j);
+			}
+		}
+		
+		return contents_table;
 	}
 	
 	// Setters
@@ -185,10 +281,10 @@ public class Connoisseur {
 
 	// Getters
 	public static Connoisseur getInstance() { return gui_instance;}
-	public CSearch getSearchArea() { return search_area;}
+	public SearchByTag getSearchArea() { return search_area;}
 	public CTabbedPane getContentsPane() { return contents_pane;}
 	public CMenuBar getMenuOptions() { return menu_options;}
 	public String getCurrentDir() { return current_dir;}
 	public String getCurrentFile() { return current_file;}
-	public JFrame getWindow() { return main_window;}
+	public JFrame getWindow() { return gui_frame;}
 }

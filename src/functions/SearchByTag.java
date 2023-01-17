@@ -7,9 +7,9 @@ import javax.swing.JTextField;
 
 import gui.Connoisseur;
 
-public class CSearch extends JTextField implements KeyListener{
+public class SearchByTag extends JTextField implements KeyListener{
 	
-	public CSearch () {
+	public SearchByTag () {
 		super();
 		init();
 	}
