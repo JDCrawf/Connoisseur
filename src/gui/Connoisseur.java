@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -153,14 +152,19 @@ public class Connoisseur {
 		
 		// start folder contents ----------------------------------------
 		
-		// TODO insert folder contents into right_vert_split.setLeftComponent()
 		contents_pane = new CTabbedPane();
 		//TODO add mouselistener to tabbed pane
 		
-		contents_table = displayDirContents(current_dir + File.separator + "Homework");
+		// creates a JTable using DefaultTableModel of the specified directory
+		contents_table = displayDirContents(current_dir);
 		
+		// Adds created JTable, inside a JScrollPane, into a new unclosable tab
 		contents_pane.addTab(getName(current_dir), new JScrollPane(contents_table));
-		contents_pane.addTabWithClose("test 1", new JScrollPane(new JPanel()));
+		
+		// TEST adding a closable tab
+		String test_dir = current_dir + File.separator + "Homework";
+		JTable test = displayDirContents(test_dir);
+		contents_pane.addTabWithClose(getName(test_dir), new JScrollPane(test));
 
 		right_vert_split.setLeftComponent(contents_pane);
 		// end folder contents ----------------------------------------
@@ -198,12 +202,12 @@ public class Connoisseur {
 		ViewDirectory dir = new ViewDirectory(selected_dir);
 		
 		String[] columns = {"", "Name", "Creation Date", "Last Access", "Last Modified", "Size"};
-		Object[] children = dir.getChildren();
+		String[] children = dir.getChildren();
 		
 		int table_columns = columns.length;
-		int table_rows = dir.getChildCount();
+		int table_rows = children.length;
 		
-		// checks if current directory is the default directory, if not creates a column for to navigate up a folder
+		// checks if current directory is the default directory, if not creates a column for navigating up a folder
 		int move_down = 0;
 		if (!selected_dir.equals(default_dir)) {
 			move_down = 1;
@@ -218,15 +222,15 @@ public class Connoisseur {
 		table.setColumnIdentifiers(columns);
 		
 		// Enables JTable to correctly display icons
-		if (table_rows == 0) {
-			contents_table = new JTable(table) {
-				public Class getColumnClass(int column) {
+		contents_table = new JTable(table) {
+			public Class<?> getColumnClass(int column) {
+				if (column == 0) {
 					return ImageIcon.class;
+				} else {
+					return super.getColumnClass(column);
 				}
-			};
-		} else {
-			contents_table = new JTable(table);
-		}
+			}
+		};
 		
 		// sets column sizings
 		contents_table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
@@ -237,7 +241,7 @@ public class Connoisseur {
 		// adds back arrow if not in default directory
 		if (move_down == 1) {
 			contents_table.setValueAt("..", 0, 1);
-			// TODO add back arrow ImageIcon
+			contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/back-16.png")), 0, 0);
 		}
 		
 		// loop for filling out JTable's metadata
@@ -247,9 +251,9 @@ public class Connoisseur {
 			
 			// fills first column with icons differentiating files and folders
 			if (Files.isDirectory(Paths.get(i_file_path))) {
-				// TODO add folder icon
+				contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/folder-16.png")), i + move_down, 0);
 			} else {
-				// TODO add file icon
+				contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/file-16.png")), i + move_down, 0);
 			}
 			
 			// fills second column with file's name

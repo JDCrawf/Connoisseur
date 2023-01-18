@@ -7,5 +7,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="refs"/>
+	<classpathentry kind="src" path="img"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
