@@ -23,7 +23,7 @@ import functions.*;
 public class Connoisseur {
 	
 	// General variables
-	private static Connoisseur gui_instance;
+	private static Connoisseur gui_window;
 	private String default_dir;
 	private String current_dir;
 	private String current_file;
@@ -45,7 +45,7 @@ public class Connoisseur {
 	private final static String PROGRAM_NAME = "Connoisseur";
 	
 	public Connoisseur() {
-		gui_instance = this;
+		gui_window = this;
 		this.default_dir = System.getProperty("user.home") + File.separator + "Documents";
 		this.current_dir = default_dir;
 		
@@ -284,7 +284,7 @@ public class Connoisseur {
 	}
 
 	// Getters
-	public static Connoisseur getInstance() { return gui_instance;}
+	public static Connoisseur getInstance() { return gui_window;}
 	public SearchByTag getSearchArea() { return search_area;}
 	public CTabbedPane getContentsPane() { return contents_pane;}
 	public CMenuBar getMenuOptions() { return menu_options;}

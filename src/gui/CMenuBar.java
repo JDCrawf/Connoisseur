@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -11,15 +12,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-//TODO add icons
 public class CMenuBar extends JMenuBar implements ActionListener {
 	
-	private JMenu file_menu, edit_menu, help_menu, playlist_menu;
+	private JMenu file_menu, edit_menu, playlist_menu;
 	private JMenu new_file_submenu, view_playlist_submenu, delete_playlist_submenu;
 	
 	private JMenuItem new_file_menuitem, new_dir_menuitem, set_default_dir_menuitem, exit_menuitem;
 	private JMenuItem new_playlist_menuitem;
 	private JMenuItem edit_tags_menuitem;
+	private JMenuItem help_menuitem;
 	
 	private ArrayList<String> playlists;
 	
@@ -41,9 +42,11 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		
 		// menu items for submenu
 		new_file_menuitem = new JMenuItem("New File");
+		new_file_menuitem.setIcon(new ImageIcon(getClass().getResource("/gui/menu/add-file-16.png")));
 		new_file_menuitem.addActionListener(this);
 		
 		new_dir_menuitem = new JMenuItem("New Directory");
+		new_dir_menuitem.setIcon(new ImageIcon(getClass().getResource("/gui/menu/add-folder-16.png")));
 		new_dir_menuitem.addActionListener(this);
 		
 		// fills "New" submenu with "New File" and "New Directory"
@@ -53,9 +56,11 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		
 		// non-"New" submenu menu items
 		set_default_dir_menuitem = new JMenuItem("Set Default Directory");
+		// TODO add new default directory icon
 		set_default_dir_menuitem.addActionListener(this);
 		
 		exit_menuitem = new JMenuItem("Exit");
+		// TODO add exit icon
 		exit_menuitem.addActionListener(this);
 		
 		// fills "File" menu with "New" submenu and "Set Default Directory" item
@@ -71,6 +76,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		edit_menu = new JMenu("Edit");
 		
 		edit_tags_menuitem = new JMenuItem("Edit Tags");
+		edit_tags_menuitem.setIcon(new ImageIcon (getClass().getResource("/gui/menu/pencil-16.png")));
 		edit_tags_menuitem.addActionListener(this);
 		
 		edit_menu.add(edit_tags_menuitem);
@@ -81,6 +87,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		playlist_menu = new JMenu("Playlist");
 		
 		new_playlist_menuitem = new JMenuItem("New Playlist");
+		// TODO add new playlist icon
 		new_playlist_menuitem.addActionListener(this);
 		
 		// TODO Create a list of all existing playlists here, pulling from playlist JSON
@@ -126,13 +133,11 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 		this.add(playlist_menu);
 	}
 	private void initHelpMenu() {
-		help_menu = new JMenu("Help");
-
-		// TODO add help options
-		JMenuItem empty = new JMenuItem("empty");
-		help_menu.add(empty);
-		
-		this.add(help_menu);
+		help_menuitem = new JMenuItem("Help");
+		// TODO add help menu icon
+		help_menuitem.addActionListener(this);
+				
+		this.add(help_menuitem);
 	}
 	
 	@Override
@@ -188,6 +193,9 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 					Connoisseur.log(selection.getActionCommand() + " already open.");
 				}
 			}
+		}
+		if (selection.getSource() == help_menuitem) {
+			Connoisseur.log("Help clicked.");
 		}
 	}
 }
