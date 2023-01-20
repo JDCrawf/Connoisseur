@@ -19,6 +19,7 @@ import javax.swing.JTree;
 import javax.swing.table.DefaultTableModel;
 
 import functions.*;
+import gui.event.*;
 
 public class Connoisseur {
 	
@@ -63,6 +64,7 @@ public class Connoisseur {
 				log("Program closed.");
 			}
 		});
+		gui_frame.addMouseListener(new CMouseListener());
 	}
 	
 	public static void main(String[] args) {
@@ -139,7 +141,7 @@ public class Connoisseur {
 		folder_tree_pane = new JScrollPane();
 		JTree tree = new JTree();
 		
-		tree.setModel(new CFolderTree(new File(current_dir)));
+		tree.setModel(new CFolderTree(current_dir));
 		//TODO add mouselistener
 		
 		folder_tree_pane.setViewportView(tree);
@@ -155,16 +157,13 @@ public class Connoisseur {
 		contents_pane = new CTabbedPane();
 		//TODO add mouselistener to tabbed pane
 		
-		// creates a JTable using DefaultTableModel of the specified directory
-		contents_table = displayDirContents(current_dir);
 		
 		// Adds created JTable, inside a JScrollPane, into a new unclosable tab
-		contents_pane.addTab(getName(current_dir), new JScrollPane(contents_table));
+		contents_pane.addTab(getName(current_dir), displayDirContents(current_dir));
 		
 		// TEST adding a closable tab
 		String test_dir = current_dir + File.separator + "Homework";
-		JTable test = displayDirContents(test_dir);
-		contents_pane.addTabWithClose(getName(test_dir), new JScrollPane(test));
+		contents_pane.addTabWithClose(getName(test_dir), displayDirContents(test_dir));
 
 		right_vert_split.setLeftComponent(contents_pane);
 		// end folder contents ----------------------------------------
@@ -197,7 +196,7 @@ public class Connoisseur {
 		File temp = new File(_path);
 		return temp.getName();
 	}
-	public JTable displayDirContents(String _dir) {
+	public JScrollPane displayDirContents(String _dir) {
 		String selected_dir = _dir;
 		ViewDirectory dir = new ViewDirectory(selected_dir);
 		
@@ -241,7 +240,7 @@ public class Connoisseur {
 		// adds back arrow if not in default directory
 		if (move_down == 1) {
 			contents_table.setValueAt("..", 0, 1);
-			contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/back-16.png")), 0, 0);
+			contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/icons8-back-16.png")), 0, 0);
 		}
 		
 		// loop for filling out JTable's metadata
@@ -251,9 +250,9 @@ public class Connoisseur {
 			
 			// fills first column with icons differentiating files and folders
 			if (Files.isDirectory(Paths.get(i_file_path))) {
-				contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/folder-16.png")), i + move_down, 0);
+				contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/icons8-folder-16.png")), i + move_down, 0);
 			} else {
-				contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/file-16.png")), i + move_down, 0);
+				contents_table.setValueAt(new ImageIcon(getClass().getResource("/gui/contents/icons8-file-16.png")), i + move_down, 0);
 			}
 			
 			// fills second column with file's name
@@ -267,7 +266,7 @@ public class Connoisseur {
 			}
 		}
 		
-		return contents_table;
+		return new JScrollPane(contents_table);
 	}
 	
 	// Setters

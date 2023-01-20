@@ -10,8 +10,8 @@ public class CFolderTree implements TreeModel{
 
 	private File root_dir;
 	
-	public CFolderTree(File _root_dir) {
-		this.root_dir = _root_dir;
+	public CFolderTree(String _dir) {
+		this.root_dir = new File(_dir);
 	}
 
 	@Override

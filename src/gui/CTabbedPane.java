@@ -76,6 +76,7 @@ class CloseTabIcon implements Icon{
 		g.drawLine(x + 10, y_p + 4, x + 4, y_p + 10);
 		g.drawLine(x + 9, y_p + 3, x + 3, y_p + 9);
 		g.setColor(col);
+		
 		if (close_icon != null) {
 			close_icon.paintIcon(c, g, x + width, y_p);
 		}
