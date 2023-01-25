@@ -144,7 +144,7 @@ public class CMenuBar extends JMenuBar implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent selection) {
-		CTabbedPane contents_pane = Connoisseur.getInstance().getContentsPane();
+		CTabbedPane contents_pane = Connoisseur.getInstance().getContentsTab();
 		
 		if (selection.getSource() == new_file_menuitem) {
 			Connoisseur.log("New File Clicked");

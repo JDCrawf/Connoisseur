@@ -40,7 +40,8 @@ public class Connoisseur {
 	private JScrollPane folder_tree_pane;
 	
 	// content view variables
-	private CTabbedPane contents_pane;
+	private CTabbedPane contents_tab;
+	private JScrollPane contents_pane;
 	private JTable contents_table;
 	
 	private final static String PROGRAM_NAME = "Connoisseur";
@@ -64,7 +65,6 @@ public class Connoisseur {
 				log("Program closed.");
 			}
 		});
-		gui_frame.addMouseListener(new CMouseListener());
 	}
 	
 	public static void main(String[] args) {
@@ -139,12 +139,8 @@ public class Connoisseur {
 		
 		// start folder tree ----------------------------------------
 		folder_tree_pane = new JScrollPane();
-		JTree tree = new JTree();
 		
-		tree.setModel(new CFolderTree(current_dir));
-		//TODO add mouselistener
-		
-		folder_tree_pane.setViewportView(tree);
+		folder_tree_pane.setViewportView(displayFolderTree(current_dir));
 		folder_tree_pane.setColumnHeaderView(new JLabel("Library"));
 		main_hori_split.setLeftComponent(folder_tree_pane);
 		// end folder tree ----------------------------------------
@@ -153,30 +149,32 @@ public class Connoisseur {
 		
 		
 		// start folder contents ----------------------------------------
-		
-		contents_pane = new CTabbedPane();
-		//TODO add mouselistener to tabbed pane
-		
+		contents_tab = new CTabbedPane();
 		
 		// Adds created JTable, inside a JScrollPane, into a new unclosable tab
-		contents_pane.addTab(getName(current_dir), displayDirContents(current_dir));
+		contents_pane = displayDirContents(current_dir);
+		contents_tab.addTab(getName(current_dir), contents_pane);
 		
 		// TEST adding a closable tab
 		String test_dir = current_dir + File.separator + "Homework";
-		contents_pane.addTabWithClose(getName(test_dir), displayDirContents(test_dir));
+		contents_tab.addTabWithClose(getName(test_dir), displayDirContents(test_dir));
 
-		right_vert_split.setLeftComponent(contents_pane);
+		right_vert_split.setLeftComponent(contents_tab);
 		// end folder contents ----------------------------------------
 		
 		
 		
 		
 		// TODO insert file metadata info into botright_hori_split.setLeftComponent()
+		// start file metadata
+		// end file metadata
 		
 		
 		
 		
 		// TODO insert file thumbnail/video player into botright_hori_split.setRightComponent()
+		// start file thumbnail/[video/audio] player
+		// end file thumbnail/[video/audio] player
 		
 		
 		
@@ -189,13 +187,33 @@ public class Connoisseur {
 	}
 	
 	// Other Methods
+	/**
+	  * 
+	  * 
+	  * 
+	  * 
+	  */
 	public static void log(String _text) {
 		System.out.println("[" + PROGRAM_NAME + "] " + _text);
 	}
-	private String getName(String _path) {
+
+	/**
+	  * 
+	  * 
+	  * 
+	  * 
+	  */
+	public static String getName(String _path) {
 		File temp = new File(_path);
 		return temp.getName();
 	}
+
+	/**
+	  * 
+	  * 
+	  * 
+	  * 
+	  */
 	public JScrollPane displayDirContents(String _dir) {
 		String selected_dir = _dir;
 		ViewDirectory dir = new ViewDirectory(selected_dir);
@@ -265,8 +283,26 @@ public class Connoisseur {
 				contents_table.setValueAt(children[i], i + move_down, j);
 			}
 		}
+		contents_table.addMouseListener(new CMouseListener(contents_table));
+
+		JScrollPane dir_contents = new JScrollPane(contents_table);
 		
-		return new JScrollPane(contents_table);
+		return dir_contents;
+	}
+	
+	/**
+	  * 
+	  * 
+	  * 
+	  * 
+	  */
+	public JTree displayFolderTree(String _dir) {
+		JTree tree = new JTree();
+		
+		tree.setModel(new CFolderTree(current_dir));
+		tree.addMouseListener(new CMouseListener(tree));
+		
+		return tree;
 	}
 	
 	// Setters
@@ -285,7 +321,8 @@ public class Connoisseur {
 	// Getters
 	public static Connoisseur getInstance() { return gui_window;}
 	public SearchByTag getSearchArea() { return search_area;}
-	public CTabbedPane getContentsPane() { return contents_pane;}
+	public JScrollPane getContentsPane() { return contents_pane;}
+	public CTabbedPane getContentsTab() { return contents_tab;}
 	public CMenuBar getMenuOptions() { return menu_options;}
 	public String getCurrentDir() { return current_dir;}
 	public String getCurrentFile() { return current_file;}
