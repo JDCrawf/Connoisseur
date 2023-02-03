@@ -46,7 +46,10 @@ public class Connoisseur {
 	
 	private final static String PROGRAM_NAME = "Connoisseur";
 	
+	private static int log_counter;
+	
 	public Connoisseur() {
+		log_counter = 0;
 		gui_window = this;
 		this.default_dir = System.getProperty("user.home") + File.separator + "Documents";
 		this.current_dir = default_dir;
@@ -188,37 +191,32 @@ public class Connoisseur {
 	
 	// Other Methods
 	/**
-	  * 
-	  * 
-	  * 
-	  * 
-	  */
+	 * 
+	 * 
+	 */
 	public static void log(String _text) {
-		System.out.println("[" + PROGRAM_NAME + "] " + _text);
+		System.out.println("[" + PROGRAM_NAME + "] : " + log_counter + " " + _text);
+		log_counter ++;
 	}
 
 	/**
-	  * 
-	  * 
-	  * 
-	  * 
-	  */
+	 * 
+	 * 
+	 */
 	public static String getName(String _path) {
 		File temp = new File(_path);
 		return temp.getName();
 	}
 
 	/**
-	  * 
-	  * 
-	  * 
-	  * 
-	  */
+	 * 
+	 * 
+	 */
 	public JScrollPane displayDirContents(String _dir) {
 		String selected_dir = _dir;
 		ViewDirectory dir = new ViewDirectory(selected_dir);
 		
-		String[] columns = {"", "Name", "Creation Date", "Last Access", "Last Modified", "Size"};
+		String[] columns = {"", "Name", "Tags", "Creation Date", "Last Access", "Last Modified", "Size"};
 		String[] children = dir.getChildren();
 		
 		int table_columns = columns.length;
@@ -291,11 +289,9 @@ public class Connoisseur {
 	}
 	
 	/**
-	  * 
-	  * 
-	  * 
-	  * 
-	  */
+	 * 
+	 * 
+	 */
 	public JTree displayFolderTree(String _dir) {
 		JTree tree = new JTree();
 		
