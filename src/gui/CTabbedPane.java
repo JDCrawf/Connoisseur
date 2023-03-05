@@ -12,15 +12,27 @@ import javax.swing.JTabbedPane;
 
 public class CTabbedPane extends JTabbedPane implements MouseListener {
 
+	/**
+	  * 
+	  * 
+	  */
 	public CTabbedPane() {
 		super();
 		this.addMouseListener(this);
 	}
 
+	/**
+	  * 
+	  * 
+	  */
 	public void addTabWithoutClose(String _label, Component _comp) {
 		super.addTab(_label, _comp);
 	}
 	
+	/**
+	  * 
+	  * 
+	  */
 	public void addTabWithClose(String _label, Component _comp) {
 		super.addTab(_label, new CloseTabIcon(), _comp);
 	}
@@ -51,6 +63,10 @@ class CloseTabIcon implements Icon{
 	private int x_pos, y_pos, width, height;
 	private Icon close_icon;
 
+	/**
+	  * 
+	  * 
+	  */
 	public CloseTabIcon() {
 		this.width = 16;
 		this.height = 16;

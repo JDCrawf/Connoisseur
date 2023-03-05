@@ -43,13 +43,19 @@ public class Connoisseur {
 	private CTabbedPane contents_tab;
 	private JScrollPane contents_pane;
 	private JTable contents_table;
+	private int current_tab;
 	
 	private final static String PROGRAM_NAME = "Connoisseur";
 	
 	private static int log_counter;
-	
+
+	/**
+	  * 
+	  * 
+	  */
 	public Connoisseur() {
 		log_counter = 0;
+		this.current_tab = 0;
 		gui_window = this;
 		this.default_dir = System.getProperty("user.home") + File.separator + "Documents";
 		this.current_dir = default_dir;
@@ -70,6 +76,7 @@ public class Connoisseur {
 		});
 	}
 	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -84,6 +91,10 @@ public class Connoisseur {
 		});
 	}
 	
+	/**
+	  * 
+	  * 
+	  */
 	private void init() {
 		// Creates main window named Connoisseur
 		gui_frame = new JFrame("Connoisseur");
@@ -191,27 +202,27 @@ public class Connoisseur {
 	
 	// Other Methods
 	/**
-	 * 
-	 * 
-	 */
+	  * 
+	  * 
+	  */
 	public static void log(String _text) {
 		System.out.println("[" + PROGRAM_NAME + "] : " + log_counter + " " + _text);
 		log_counter ++;
 	}
 
 	/**
-	 * 
-	 * 
-	 */
+	  * 
+	  * 
+	  */
 	public static String getName(String _path) {
 		File temp = new File(_path);
 		return temp.getName();
 	}
 
 	/**
-	 * 
-	 * 
-	 */
+	  * 
+	  * 
+	  */
 	public JScrollPane displayDirContents(String _dir) {
 		String selected_dir = _dir;
 		ViewDirectory dir = new ViewDirectory(selected_dir);
@@ -289,9 +300,9 @@ public class Connoisseur {
 	}
 	
 	/**
-	 * 
-	 * 
-	 */
+	  * 
+	  * 
+	  */
 	public JTree displayFolderTree(String _dir) {
 		JTree tree = new JTree();
 		
@@ -322,5 +333,6 @@ public class Connoisseur {
 	public CMenuBar getMenuOptions() { return menu_options;}
 	public String getCurrentDir() { return current_dir;}
 	public String getCurrentFile() { return current_file;}
+	public int getCurrentTab() { return current_tab;}
 	public JFrame getWindow() { return gui_frame;}
 }

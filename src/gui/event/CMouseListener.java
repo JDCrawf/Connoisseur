@@ -23,7 +23,7 @@ public class CMouseListener implements MouseListener{
 	private String file_clicked;
 	
 	/**
-	  * 
+	  * Creates a CMouseListener object that registers mouse actions in either a JTree or a JTable
 	  * 
 	  */
 	public CMouseListener(Component _source) {
@@ -65,9 +65,9 @@ public class CMouseListener implements MouseListener{
 	}
 
 	/**
-	 *
-	 * 
-	 */
+	  * Handles mouse actions when this class is attached to a JTree
+	  * 
+	  */
 	private void treeMouseClicked(MouseEvent e) {
 		String new_clicked;
 		
@@ -124,7 +124,7 @@ public class CMouseListener implements MouseListener{
 			
 			// Opens in selected directory in main tab
 			Connoisseur.log(" Open directory from JTree: " + new_clicked);
-			Connoisseur.getInstance().getContentsTab().setComponentAt(0, Connoisseur.getInstance().displayDirContents(new_clicked));
+			Connoisseur.getInstance().getContentsTab().setComponentAt(Connoisseur.getInstance().getCurrentTab(), Connoisseur.getInstance().displayDirContents(new_clicked));
 			Connoisseur.getInstance().getContentsTab().setTitleAt(0, Connoisseur.getName(new_clicked));
 			Connoisseur.getInstance().setCurrentDir(new_clicked);
 			
@@ -137,9 +137,9 @@ public class CMouseListener implements MouseListener{
 	}
 
 	/**
-	 *
-	 * 
-	 */
+	  * Handles mouse actions when this class is attached to a JTable
+	  * 
+	  */
 	private void tableMouseClicked(MouseEvent e) {
 		String new_clicked;
 		
@@ -201,7 +201,7 @@ public class CMouseListener implements MouseListener{
 			// changes displayed directory
 			Connoisseur.log(" Open directory from JTable: " + new_clicked);
 			Connoisseur.getInstance().getContentsTab().setComponentAt(0, Connoisseur.getInstance().displayDirContents(new_clicked));
-			Connoisseur.getInstance().getContentsTab().setTitleAt(0, Connoisseur.getName(new_clicked));
+			Connoisseur.getInstance().getContentsTab().setTitleAt(Connoisseur.getInstance().getCurrentTab(), Connoisseur.getName(new_clicked));
 			Connoisseur.getInstance().setCurrentDir(new_clicked);
 			
 		// single-click actions
@@ -223,9 +223,9 @@ public class CMouseListener implements MouseListener{
 	
 	// Other methods
 	/**
-	 * 
-	 * 
-	 */
+	  * Converts TreePath object to String object
+	  * 
+	  */
 	private String treePathToString(TreePath _treepath) {
 		String path;
 		Object[] steps = _treepath.getPath();
